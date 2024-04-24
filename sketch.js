@@ -1,7 +1,7 @@
 const GRID = [];
 let wallsSequence = [];
 const sets = [];
-const W = 25;
+const W = 40;
 const H = W;
 let rows, cols, cellCount;
 
@@ -34,6 +34,7 @@ function setup() {
         if (i % cols != 0)
             wallsSequence.push([leftId, i]);
     }
+    GRID[0].distance = 0;
 
     wallsSequence = wallsSequence.filter((t={}, a => !(t[a] = a in t)));
     for (let i = 0; i < wallsSequence.length; i++) {
@@ -42,6 +43,17 @@ function setup() {
         wallsSequence[i] = wallsSequence[rand];
         wallsSequence[rand] = temp;
     }
+
+    // console.log(GRID)
+    let pq = new CellPriorityQueue();
+    GRID[3].distance = 10;
+    GRID[13].distance = 1;
+    GRID[23].distance = 21;
+    GRID[4].distance = 5;
+    GRID[5].distance = 9;
+    pq.buildHeap(GRID);
+    console.log(pq)
+
 }
 
 let iter = 0;

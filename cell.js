@@ -5,6 +5,7 @@ class Cell {
         this.index = id;
         this.x = (this.index % cols) * W;
         this.y = floor(this.index / cols) * H;
+        this.distance = Infinity;
         this.sides = [true, true, true, true];
     }
 
