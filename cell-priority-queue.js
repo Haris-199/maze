@@ -15,26 +15,21 @@ class CellPriorityQueue {
     }
 
     heapify(index) {
-        let smallest = index;
+        let left = index * 2 + 1;
+        let right = left + 1;
         
-        while (index < Math.floor(this.size / 2)) {
-            console.log(this.heap, index);
-            let left = index * 2 + 1;
-            let right = left + 1;
+        let smallest = index;
 
-            if (left < this.size && this.heap[smallest].distance > this.heap[left].distance)
-                smallest = left;
-            if (right < this.size && this.heap[smallest].distance > this.heap[right].distance)
-                smallest = right;
+        if (left < this.size && this.heap[smallest].distance > this.heap[left].distance)
+            smallest = left;
+        if (right < this.size && this.heap[smallest].distance > this.heap[right].distance)
+            smallest = right;
 
-            if (smallest === index) 
-                break;
-
+        if (smallest != index) {
             let temp = this.heap[index];
             this.heap[index] = this.heap[smallest];
             this.heap[smallest] = temp;
-
-            index = smallest;
+            heapify(smallest);
         }
     }
 
