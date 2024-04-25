@@ -49,10 +49,16 @@ function setup() {
     GRID[3].distance = 10;
     GRID[13].distance = 1;
     GRID[23].distance = 21;
-    GRID[4].distance = 5;
     GRID[5].distance = 9;
+    GRID[15].distance = 9;
+    GRID[50].distance = 2;
+    GRID[34].distance = 92;
+    GRID[1].distance = 9;
+    GRID[4].distance = 5;
     pq.buildHeap(GRID);
-    console.log(pq)
+    console.log(pq);
+    console.log(pq.extractMin());
+    console.log(pq);
 
 }
 
