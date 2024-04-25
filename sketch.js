@@ -44,7 +44,6 @@ function setup() {
         wallsSequence[rand] = temp;
     }
 
-    // console.log(GRID)
     let pq = new CellPriorityQueue();
     GRID[3].distance = 10;
     GRID[13].distance = 1;
@@ -58,6 +57,9 @@ function setup() {
     pq.buildHeap(GRID);
     console.log(pq);
     console.log(pq.extractMin());
+    console.log(pq);
+    pq.updateKey(7, 0);
+    pq.updateKey(10, 4);
     console.log(pq);
 
 }
