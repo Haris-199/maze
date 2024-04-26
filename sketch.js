@@ -5,6 +5,7 @@ const W = 10;
 const H = W;
 let rows, cols, cellCount;
 const PQ = new CellPriorityQueue();
+let stack = [];
 let start, end;
 let state = 0;
 
@@ -41,6 +42,7 @@ function setup() {
 
     start.distance = 0;
     PQ.buildHeap(CELLS);
+    stack.push(start);
 
     wallsSequence = wallsSequence.filter((t={}, a => !(t[a] = a in t)));
     for (let i = 0; i < wallsSequence.length; i++) {
@@ -88,7 +90,7 @@ function draw() {
         }
         iter++;
         if (iter === len) {
-            state = 1;
+            state = 2;
             iter = 0;
         }
     } else if (state === 1) {
@@ -106,7 +108,21 @@ function draw() {
             }
         }
     } else if (state === 2) {
-        // DFS
+        if (stack.length > 0) {
+            cell = stack.pop();
+            if (!visited[cell.index]) {
+                visited[cell.index] = true;
+                cell.neighbours().reverse().forEach( n => {
+                    if (!visited[n.index]) {
+                        n.previous = cell;
+                        stack.push(n);
+                    }
+                });
+            }
+        }
+        if (visited[end.index]) {
+            state = 3;
+        }
     } else if (state === 3) {
         let cell = end;
         noFill();
