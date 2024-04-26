@@ -5,7 +5,6 @@ const W = 40;
 const H = W;
 let rows, cols, cellCount;
 const PQ = new CellPriorityQueue();
-let path = [];
 let start, end;
 let state = 0;
 
@@ -99,15 +98,28 @@ function draw() {
             current.neighbours().forEach( cell => {
                 if (current.distance + 1 < cell.distance) {
                     cell.distance = current.distance + 1;
+                    cell.previous = current;
                     PQ.updateKey(cell, current.distance + 1);
                 }
             });
-        } else {
-            state = 2;
+            if (visited[end.index]) {
+                state = 2;
+            }
         }
     } else if (state === 2) {
-        noLoop();
-    } else if (state === 3) {
-        noLoop();
-    }
+        let cell = end;
+        noFill();
+        stroke(200, 20, 100);
+        strokeWeight(3);
+        beginShape();
+        while (cell != undefined) {
+            vertex(cell.x + W/2, cell.y + H/2);
+            cell = cell.previous;
+        }
+        endShape();
+        strokeWeight(1);
+    } 
+    // else if (state === 3) {
+    //     noLoop();
+    // }
 }

@@ -25,18 +25,19 @@ class Cell {
             fill(0, 200, 0, 50);
             noStroke();
             rect(this.x, this.y, W, H);
-        }
-        if (this === end) {
+        } else if (this === end) {
             fill(200, 0, 0, 100);
             noStroke();
             rect(this.x, this.y, W, H);
-        }
-        if (visited[this.index]) {
-            textAlign(CENTER);
-            textSize((W+H)/4);
-            stroke(250);
-            fill(250);
-            text(this.distance, this.x + W/2, this.y + H/2 + (W+H)/16);
+        } else if (visited[this.index]) {
+            fill(150, 150, 0, 100);
+            noStroke();
+            rect(this.x, this.y, W, H);
+            // textAlign(CENTER);
+            // textSize((W+H)/4);
+            // stroke(250);
+            // fill(250);
+            // text(this.distance, this.x + W/2, this.y + H/2 + (W+H)/16);
         }
     }
 
