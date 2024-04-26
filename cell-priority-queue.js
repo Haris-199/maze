@@ -3,7 +3,6 @@ class CellPriorityQueue {
     constructor() {
         this.heap = []
         this.size = 0;
-
     }
 
     heapify(index) {
@@ -33,11 +32,13 @@ class CellPriorityQueue {
     }
 
     extractMin() {
-        let min = this.heap[0];
-        this.heap[0] = this.heap.pop();
-        this.size--;
-        this.heapify(0);
-        return min;
+        if (this.size > 0) {
+            let min = this.heap[0];
+            this.heap[0] = this.heap[--this.size];
+            this.heap.pop();
+            this.heapify(0);
+            return min;
+        }
     }
 
     updateKey(index, newKey) {
