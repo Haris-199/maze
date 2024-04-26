@@ -59,9 +59,9 @@ function draw() {
     CELLS.forEach(cell => cell.show());
 
     // State 0: Generate maze
-    // State 1: Find shortest path to end
-    // State 2: Draw path
-    // State 3: Stop
+    // State 1: Find shortest path with Dijkstra's algorithm
+    // State 2: Find shortest path with DFS
+    // State 3: Draw path
    
     if (state === 0) {
         let len = wallsSequence.length;
@@ -103,10 +103,12 @@ function draw() {
                 }
             });
             if (visited[end.index]) {
-                state = 2;
+                state = 3;
             }
         }
     } else if (state === 2) {
+        // DFS
+    } else if (state === 3) {
         let cell = end;
         noFill();
         stroke(200, 20, 100);
@@ -118,8 +120,5 @@ function draw() {
         }
         endShape();
         strokeWeight(1);
-    } 
-    // else if (state === 3) {
-    //     noLoop();
-    // }
+    }
 }
