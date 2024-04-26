@@ -1,10 +1,12 @@
 const CELLS = [];
 let wallsSequence = [];
 const sets = [];
-const W = 20;
+const W = 40;
 const H = W;
 let rows, cols, cellCount;
 const PQ = new CellPriorityQueue();
+let path = [];
+let start, end;
 let state = 0;
 
 function setup() {
@@ -35,7 +37,10 @@ function setup() {
             wallsSequence.push([leftId, i]);
     }
 
-    CELLS[0].distance = 0;
+    start = CELLS[0];
+    end = CELLS[cellCount - 1];
+
+    start.distance = 0;
     PQ.buildHeap(CELLS);
 
     wallsSequence = wallsSequence.filter((t={}, a => !(t[a] = a in t)));

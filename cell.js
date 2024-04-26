@@ -21,8 +21,13 @@ class Cell {
             line(this.x + W, this.y + H, this.x, this.y + H); // bottom
         if (this.sides[3])
             line(this.x, this.y + H, this.x, this.y); // left
-        if (this.index === 0 || this.index === cellCount - 1) {
+        if (this === start) {
             fill(0, 200, 0, 50);
+            noStroke();
+            rect(this.x, this.y, W, H);
+        }
+        if (this === end) {
+            fill(200, 0, 0, 100);
             noStroke();
             rect(this.x, this.y, W, H);
         }
