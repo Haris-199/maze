@@ -1,7 +1,7 @@
 const CELLS = [];
 let wallsSequence = [];
 const sets = [];
-const W = 40;
+const W = 10;
 const H = W;
 let rows, cols, cellCount;
 const PQ = new CellPriorityQueue();
@@ -97,7 +97,6 @@ function draw() {
             visited[current.index] = true;
             current.neighbours().forEach( cell => {
                 if (current.distance + 1 < cell.distance) {
-                    cell.distance = current.distance + 1;
                     cell.previous = current;
                     PQ.updateKey(cell, current.distance + 1);
                 }

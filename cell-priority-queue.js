@@ -42,23 +42,12 @@ class CellPriorityQueue {
     }
 
     updateKey(cell, newKey) {
-        // for (let i = 0; i < this.size; i++) {
-        //     let cell = this.heap[i];
-        //     if (cell.index === index) {
-        //         index = i;
-        //         break;
-        //     }
-        // }
+        cell.distance = newKey;
 
-        // this.heap.forEach( (cell, i) => {
-        //     if (cell.index === index) 
-        //         index = i;
-        // });
         let index = this.heap.indexOf(cell);
-        this.heap[index].distance = newKey;
         let parentIndex = Math.floor((index - 1) / 2);
-
-        let child = this.heap[index];
+        
+        let child = cell;
         let parent = this.heap[parentIndex];
 
         while (index != 0 && parent.distance > child.distance) {
