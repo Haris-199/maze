@@ -1,7 +1,7 @@
 const CELLS = [];
 let wallsSequence = [];
 const sets = [];
-const W = 50;
+const W = 20;
 const H = W;
 let rows, cols, cellCount;
 const PQ = new CellPriorityQueue();
@@ -53,6 +53,11 @@ function draw() {
     background(50);
 
     CELLS.forEach(cell => cell.show());
+
+    // State 0: Generate maze
+    // State 1: Find shortest path to end
+    // State 2: Draw path
+    // State 3: Stop
    
     if (state === 0) {
         let len = wallsSequence.length;
@@ -89,13 +94,15 @@ function draw() {
             current.neighbours().forEach( cell => {
                 if (current.distance + 1 < cell.distance) {
                     cell.distance = current.distance + 1;
-                    PQ.updateKey(cell.index, current.distance + 1);
+                    PQ.updateKey(cell, current.distance + 1);
                 }
             });
         } else {
             state = 2;
         }
     } else if (state === 2) {
+        noLoop();
+    } else if (state === 3) {
         noLoop();
     }
 }

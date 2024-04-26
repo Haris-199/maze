@@ -41,15 +41,20 @@ class CellPriorityQueue {
         }
     }
 
-    updateKey(index, newKey) {
-        for (let i = 0; i < this.size; i++) {
-            let cell = this.heap[i];
-            if (cell.index === index) {
-                index = i;
-                break;
-            }
-        }
+    updateKey(cell, newKey) {
+        // for (let i = 0; i < this.size; i++) {
+        //     let cell = this.heap[i];
+        //     if (cell.index === index) {
+        //         index = i;
+        //         break;
+        //     }
+        // }
 
+        // this.heap.forEach( (cell, i) => {
+        //     if (cell.index === index) 
+        //         index = i;
+        // });
+        let index = this.heap.indexOf(cell);
         this.heap[index].distance = newKey;
         let parentIndex = Math.floor((index - 1) / 2);
 
