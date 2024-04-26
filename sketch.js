@@ -1,10 +1,10 @@
-const GRID = [];
+const CELLS = [];
 let wallsSequence = [];
 const sets = [];
-const W = 40;
+const W = 50;
 const H = W;
 let rows, cols, cellCount;
-
+const PQ = new CellPriorityQueue();
 let state = 0;
 
 function setup() {
@@ -15,10 +15,10 @@ function setup() {
     cellCount = rows * cols;
 
     for (let i = 0; i < cellCount; i++) {
-        GRID[i] = new Cell(i);
+        CELLS[i] = new Cell(i);
         
         sets[i] = new Set();
-        sets[i].add(GRID[i]);
+        sets[i].add(CELLS[i]);
 
         let topId = i - cols;
         let rightId = i + 1;
@@ -34,7 +34,9 @@ function setup() {
         if (i % cols != 0)
             wallsSequence.push([leftId, i]);
     }
-    GRID[0].distance = 0;
+
+    CELLS[0].distance = 0;
+    PQ.buildHeap(CELLS);
 
     wallsSequence = wallsSequence.filter((t={}, a => !(t[a] = a in t)));
     for (let i = 0; i < wallsSequence.length; i++) {
@@ -43,41 +45,21 @@ function setup() {
         wallsSequence[i] = wallsSequence[rand];
         wallsSequence[rand] = temp;
     }
-
-    let pq = new CellPriorityQueue();
-    GRID[3].distance = 10;
-    GRID[13].distance = 1;
-    GRID[23].distance = 21;
-    GRID[5].distance = 9;
-    GRID[15].distance = 9;
-    GRID[50].distance = 2;
-    GRID[34].distance = 92;
-    GRID[1].distance = 9;
-    GRID[4].distance = 5;
-    pq.buildHeap(GRID);
-    console.log(pq);
-    console.log(pq.extractMin());
-    console.log(pq);
-    pq.updateKey(7, 0);
-    pq.updateKey(10, 4);
-    console.log(pq);
-
 }
 
 let iter = 0;
+let visited = [];
 function draw() {
     background(50);
 
-    for (let i = 0; i < cellCount; i++) {
-        GRID[i].show();
-    }
-
+    CELLS.forEach(cell => cell.show());
+   
     if (state === 0) {
         let len = wallsSequence.length;
         let index1 = wallsSequence[iter][0];
         let index2 = wallsSequence[iter][1];
-        let cell1 = GRID[index1];
-        let cell2 = GRID[index2];
+        let cell1 = CELLS[index1];
+        let cell2 = CELLS[index2];
         let set1 = sets[cell1.setId];
         let set2 = sets[cell2.setId];
 
@@ -100,5 +82,20 @@ function draw() {
             state = 1;
             iter = 0;
         }
+    } else if (state === 1) {
+        current = PQ.extractMin();
+        if (current) {
+            visited[current.index] = true;
+            current.neighbours().forEach( cell => {
+                if (current.distance + 1 < cell.distance) {
+                    cell.distance = current.distance + 1;
+                    PQ.updateKey(cell.index, current.distance + 1);
+                }
+            });
+        } else {
+            state = 2;
+        }
+    } else if (state === 2) {
+        noLoop();
     }
 }
