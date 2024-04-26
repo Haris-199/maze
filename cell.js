@@ -26,11 +26,13 @@ class Cell {
             noStroke();
             rect(this.x, this.y, W, H);
         }
-        // textAlign(CENTER);
-        // textSize((W+H)/4);
-        // stroke(250);
-        // fill(250);
-        // text(this.setId, this.x + W/2, this.y + H/2);
+        if (visited[this.index]) {
+            textAlign(CENTER);
+            textSize((W+H)/4);
+            stroke(250);
+            fill(250);
+            text(this.distance, this.x + W/2, this.y + H/2 + (W+H)/16);
+        }
     }
 
     neighbours() {
