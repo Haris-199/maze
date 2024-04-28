@@ -1,11 +1,12 @@
 const CELLS = [];
 let wallsSequence = [];
 const sets = [];
-const W = 10;
+const W = 40;
 const H = W;
 let rows, cols, cellCount;
 const PQ = new CellPriorityQueue();
 let stack = [];
+let queue = [];
 let start, end;
 let state = 0;
 
@@ -43,6 +44,7 @@ function setup() {
     start.distance = 0;
     PQ.buildHeap(CELLS);
     stack.push(start);
+    queue.push(start);
 
     wallsSequence = wallsSequence.filter((t={}, a => !(t[a] = a in t)));
     for (let i = 0; i < wallsSequence.length; i++) {
@@ -63,7 +65,9 @@ function draw() {
     // State 0: Generate maze
     // State 1: Find shortest path with Dijkstra's algorithm
     // State 2: Find shortest path with DFS
-    // State 3: Draw path
+    // State 3: Find shortest path with BFS
+    // State 4: Find shortest path with A*
+    // State 5: Draw path
    
     if (state === 0) {
         let len = wallsSequence.length;
@@ -89,11 +93,14 @@ function draw() {
             }
         }
         iter++;
+
         if (iter === len) {
-            state = 2;
+            state = 3;
             iter = 0;
-        }
+        } 
+    
     } else if (state === 1) {
+
         current = PQ.extractMin();
         if (current) {
             visited[current.index] = true;
@@ -104,15 +111,17 @@ function draw() {
                 }
             });
             if (visited[end.index]) {
-                state = 3;
+                state = 5;
             }
         }
+
     } else if (state === 2) {
+
         if (stack.length > 0) {
             cell = stack.pop();
             if (!visited[cell.index]) {
                 visited[cell.index] = true;
-                cell.neighbours().reverse().forEach( n => {
+                cell.neighbours().forEach( n => {
                     if (!visited[n.index]) {
                         n.previous = cell;
                         stack.push(n);
@@ -121,9 +130,32 @@ function draw() {
             }
         }
         if (visited[end.index]) {
-            state = 3;
+            state = 5;
         }
+
     } else if (state === 3) {
+
+        if (queue.length > 0) {
+            cell = queue.shift();
+            if (!visited[cell.index]) {
+                visited[cell.index] = true;
+                cell.neighbours().forEach( n => {
+                    if (!visited[n.index]) {
+                        n.previous = cell;
+                        queue.push(n);
+                    }
+                });
+            }
+        }
+        if (visited[end.index]) {
+            state = 2;
+        }
+
+    } else if (state === 4) {
+
+
+
+    } else if (state === 5) {
         let cell = end;
         noFill();
         stroke(200, 20, 100);
