@@ -1,7 +1,7 @@
 const CELLS = [];
 let wallsSequence = [];
 const sets = [];
-const W = 10;
+const W = 25;
 const H = W;
 let rows, cols, cellCount;
 const PQ = new CellPriorityQueue();
@@ -69,7 +69,6 @@ function draw() {
     // State 2: Find shortest path with DFS
     // State 3: Find shortest path with BFS
     // State 4: Find shortest path with A*
-    // State 5: Draw path
    
     if (state === 0) {
 
@@ -123,12 +122,12 @@ function draw() {
     } else if (state === 2) {
 
         if (stack.length > 0) {
-            cell = stack.pop();
-            if (!visited[cell.index]) {
-                visited[cell.index] = true;
-                cell.neighbours().forEach( n => {
+            current = stack.pop();
+            if (!visited[current.index]) {
+                visited[current.index] = true;
+                current.neighbours().forEach( n => {
                     if (!visited[n.index]) {
-                        n.previous = cell;
+                        n.previous = current;
                         stack.push(n);
                     }
                 });
@@ -141,12 +140,12 @@ function draw() {
     } else if (state === 3) {
 
         if (queue.length > 0) {
-            cell = queue.shift();
-            if (!visited[cell.index]) {
-                visited[cell.index] = true;
-                cell.neighbours().forEach( n => {
+            current = queue.shift();
+            if (!visited[current.index]) {
+                visited[current.index] = true;
+                current.neighbours().forEach( n => {
                     if (!visited[n.index]) {
-                        n.previous = cell;
+                        n.previous = current;
                         queue.push(n);
                     }
                 });
@@ -176,20 +175,19 @@ function draw() {
         }
 
     }
-    //  else if (state === 5) 
-     {
-        let cell = current;
-        noFill();
-        stroke(200, 20, 100);
-        strokeWeight(3);
-        beginShape();
-        while (cell) {
-            vertex(cell.x + W/2, cell.y + H/2);
-            cell = cell.previous;
-        }
-        endShape();
-        strokeWeight(1);
+
+    let cell = current;
+    noFill();
+    stroke(200, 20, 100);
+    strokeWeight(3);
+    beginShape();
+    while (cell) {
+        vertex(cell.x + W/2, cell.y + H/2);
+        cell = cell.previous;
     }
+    endShape();
+    strokeWeight(1);
+
 }
 
 function heuristic(cell) {
