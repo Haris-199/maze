@@ -1,7 +1,7 @@
 const CELLS = [];
 let wallsSequence = [];
 const sets = [];
-const W = 40;
+const W = 10;
 const H = W;
 let rows, cols, cellCount;
 const PQ = new CellPriorityQueue();
@@ -70,35 +70,38 @@ function draw() {
     // State 5: Draw path
    
     if (state === 0) {
-        let len = wallsSequence.length;
-        let index1 = wallsSequence[iter][0];
-        let index2 = wallsSequence[iter][1];
-        let cell1 = CELLS[index1];
-        let cell2 = CELLS[index2];
-        let set1 = sets[cell1.setId];
-        let set2 = sets[cell2.setId];
 
-        if (set1 != set2) {
-            let temp = cell2.setId;
-            set2.forEach( item => {item.setId = cell1.setId} );
-            sets[cell1.setId] = sets[cell1.setId].union(sets[temp]);
-            sets[temp].clear();
+        for (let i = 0; i < 200/W; i++) {
+            let len = wallsSequence.length;
+            let index1 = wallsSequence[iter][0];
+            let index2 = wallsSequence[iter][1];
+            let cell1 = CELLS[index1];
+            let cell2 = CELLS[index2];
+            let set1 = sets[cell1.setId];
+            let set2 = sets[cell2.setId];
 
-            if (cell2.index - cell1.index == 1) {
-                cell1.sides[1] = false;
-                cell2.sides[3] = false;
-            } else if (cell2.index - cell1.index == cols) {
-                cell1.sides[2] = false;
-                cell2.sides[0] = false;
+            if (set1 != set2) {
+                let temp = cell2.setId;
+                set2.forEach( item => {item.setId = cell1.setId} );
+                sets[cell1.setId] = sets[cell1.setId].union(sets[temp]);
+                sets[temp].clear();
+
+                if (cell2.index - cell1.index == 1) {
+                    cell1.sides[1] = false;
+                    cell2.sides[3] = false;
+                } else if (cell2.index - cell1.index == cols) {
+                    cell1.sides[2] = false;
+                    cell2.sides[0] = false;
+                }
             }
-        }
-        iter++;
+            iter++;
 
-        if (iter === len) {
-            state = 4;
-            iter = 0;
-        } 
-    
+            if (iter === len) {
+                state = 4;
+                iter = 0;
+                break;
+            } 
+        }
     } else if (state === 1) {
 
         current = PQ.extractMin();
