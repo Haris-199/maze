@@ -8,7 +8,11 @@ const PQ = new CellPriorityQueue();
 let stack = [];
 let queue = [];
 let start, end;
+let visited = [];
+let current;
+let iter = 0;
 let state = 0;
+
 
 function setup() {
     createCanvas(400, 400);
@@ -55,8 +59,6 @@ function setup() {
     }
 }
 
-let iter = 0;
-let visited = [];
 function draw() {
     background(50);
 
@@ -151,12 +153,12 @@ function draw() {
             }
         }
         if (visited[end.index]) {
-            state = 2;
+            state = 5;
         }
 
     } else if (state === 4) {
 
-        let current = PQ.extractMin();
+        current = PQ.extractMin();
         if (current) {
             visited[current.index] = true;
             let actualDist = Math.round(current.distance - heuristic(current));
@@ -169,17 +171,19 @@ function draw() {
                 }
             });
             if (visited[end.index]) {
-                state = 2;
+                state = 5;
             }
         }
 
-    } else if (state === 5) {
-        let cell = end;
+    }
+    //  else if (state === 5) 
+     {
+        let cell = current;
         noFill();
         stroke(200, 20, 100);
         strokeWeight(3);
         beginShape();
-        while (cell != undefined) {
+        while (cell) {
             vertex(cell.x + W/2, cell.y + H/2);
             cell = cell.previous;
         }
