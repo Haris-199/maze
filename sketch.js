@@ -41,7 +41,7 @@ function setup() {
     start = CELLS[0];
     end = CELLS[cellCount - 1];
 
-    start.distance = 0;
+    start.distance = heuristic(start);
     PQ.buildHeap(CELLS);
     stack.push(start);
     queue.push(start);
@@ -95,7 +95,7 @@ function draw() {
         iter++;
 
         if (iter === len) {
-            state = 3;
+            state = 4;
             iter = 0;
         } 
     
@@ -153,7 +153,22 @@ function draw() {
 
     } else if (state === 4) {
 
-
+        let current = PQ.extractMin();
+        if (current) {
+            visited[current.index] = true;
+            let actualDist = Math.round(current.distance - heuristic(current));
+            current.neighbours().forEach( cell => {
+                let edgeWeight = 1;
+                let h = heuristic(cell);
+                if (actualDist + edgeWeight + h < cell.distance) {
+                    cell.previous = current;
+                    PQ.updateKey(cell, actualDist + edgeWeight + h);
+                }
+            });
+            if (visited[end.index]) {
+                state = 2;
+            }
+        }
 
     } else if (state === 5) {
         let cell = end;
@@ -168,4 +183,8 @@ function draw() {
         endShape();
         strokeWeight(1);
     }
+}
+
+function heuristic(cell) {
+    return Math.sqrt((end.x - cell.x)*(end.x - cell.x) + (end.y - cell.y)*(end.y - cell.y));
 }
