@@ -33,7 +33,7 @@ buttonsDiv.addEventListener("click", (event) => {
             state = 3;
             break;
         case "a-star":
-            // start.distance = heuristic(start);
+            start.distance = heuristic(start);
             state = 4;
             break;
     }
