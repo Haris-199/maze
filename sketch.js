@@ -4,7 +4,7 @@ const sets = [];
 const W = 25;
 const H = W;
 let rows, cols, cellCount;
-const PQ = new CellPriorityQueue();
+let pq = new CellPriorityQueue();
 let stack = [];
 let queue = [];
 let start, end;
@@ -12,7 +12,6 @@ let visited = [];
 let current;
 let iter = 0;
 let state = 0;
-
 
 function setup() {
     createCanvas(400, 400);
@@ -46,13 +45,13 @@ function setup() {
     end = CELLS[cellCount - 1];
 
     start.distance = heuristic(start);
-    PQ.buildHeap(CELLS);
+    pq.buildHeap(CELLS);
     stack.push(start);
     queue.push(start);
 
     wallsSequence = wallsSequence.filter((t={}, a => !(t[a] = a in t)));
     for (let i = 0; i < wallsSequence.length; i++) {
-        let rand = Math.floor(Math.random() * wallsSequence.length);
+        let rand = Math.floor(random() * wallsSequence.length);
         let temp = wallsSequence[i];
         wallsSequence[i] = wallsSequence[rand];
         wallsSequence[rand] = temp;
@@ -64,6 +63,7 @@ function draw() {
 
     CELLS.forEach(cell => cell.show());
 
+    // State -1: Waiting
     // State 0: Generate maze
     // State 1: Find shortest path with Dijkstra's algorithm
     // State 2: Find shortest path with DFS
@@ -98,24 +98,25 @@ function draw() {
             iter++;
 
             if (iter === len) {
-                state = 4;
+                state = -1;
                 iter = 0;
                 break;
             } 
         }
+
     } else if (state === 1) {
 
-        current = PQ.extractMin();
+        current = pq.extractMin();
         if (current) {
             visited[current.index] = true;
             current.neighbours().forEach( cell => {
                 if (current.distance + 1 < cell.distance) {
                     cell.previous = current;
-                    PQ.updateKey(cell, current.distance + 1);
+                    pq.updateKey(cell, current.distance + 1);
                 }
             });
             if (visited[end.index]) {
-                state = 5;
+                state = -1;
             }
         }
 
@@ -134,7 +135,7 @@ function draw() {
             }
         }
         if (visited[end.index]) {
-            state = 5;
+            state = -1;
         }
 
     } else if (state === 3) {
@@ -152,12 +153,12 @@ function draw() {
             }
         }
         if (visited[end.index]) {
-            state = 5;
+            state = -1;
         }
 
     } else if (state === 4) {
 
-        current = PQ.extractMin();
+        current = pq.extractMin();
         if (current) {
             visited[current.index] = true;
             let actualDist = Math.round(current.distance - heuristic(current));
@@ -166,11 +167,11 @@ function draw() {
                 let h = heuristic(cell);
                 if (actualDist + edgeWeight + h < cell.distance) {
                     cell.previous = current;
-                    PQ.updateKey(cell, actualDist + edgeWeight + h);
+                    pq.updateKey(cell, actualDist + edgeWeight + h);
                 }
             });
             if (visited[end.index]) {
-                state = 5;
+                state = -1;
             }
         }
 
@@ -187,7 +188,7 @@ function draw() {
     }
     endShape();
     strokeWeight(1);
-
+    
 }
 
 function heuristic(cell) {
