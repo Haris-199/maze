@@ -5,9 +5,23 @@ html {
 }
 
 body {
+    display: flex;
+    /* align-items: center; */
     background-color: rgb(30, 30, 30);
 }
 
+p {
+    color:white;
+    margin: 5%;
+}
+
+button {
+    display: block;
+    width: 100%;
+    margin: 5%;
+}
+
 canvas {
-    border: solid #aaaaaa 2px;
+    margin: 5%;
+    border: solid #aaa 2px;
 }
